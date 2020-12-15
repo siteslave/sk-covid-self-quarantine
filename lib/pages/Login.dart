@@ -1,7 +1,9 @@
 import 'package:covid_self_quarantine/Api.dart';
+import 'package:covid_self_quarantine/HomePage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -9,7 +11,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   final _formKey = GlobalKey<FormState>();
 
   Api api = Api();
@@ -17,18 +18,27 @@ class _LoginState extends State<Login> {
   TextEditingController ctrlUsername = TextEditingController();
   TextEditingController ctrlPassword = TextEditingController();
 
+  final storage = new FlutterSecureStorage();
+
   Future doLogin() async {
     String username = ctrlUsername.text;
     String password = ctrlPassword.text;
 
     try {
       Response response = await api.login(username, password);
-      print(response.data);
-    } catch(error) {
+      var data = response.data;
+      if (data['token'] != null) {
+        String token = data['token'];
+        await storage.write(key: 'token', value: token);
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()));
+      } else {
+        print(data['message']);
+      }
+    } catch (error) {
       print(error);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +65,12 @@ class _LoginState extends State<Login> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.admin_panel_settings, color: Colors.purple, size: 45),
+                        Icon(Icons.admin_panel_settings,
+                            color: Colors.purple, size: 45),
                         Text(
                           'SELF-QUARANTINE',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -118,7 +130,7 @@ class _LoginState extends State<Login> {
                           textColor: Colors.white,
                           icon: Icon(Icons.keyboard),
                           onPressed: () {
-                            if(_formKey.currentState.validate()) {
+                            if (_formKey.currentState.validate()) {
                               doLogin();
                             }
                           },
