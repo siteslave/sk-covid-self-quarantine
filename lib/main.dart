@@ -1,4 +1,4 @@
-import 'package:covid_self_quarantine/HomePage.dart';
+import './pages/Login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +11,7 @@ class Main extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'SELF-QUARANTINE',
-      home: HomePage(),
+      home: Login(),
     );
   }
 }
