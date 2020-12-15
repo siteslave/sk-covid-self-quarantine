@@ -25,9 +25,38 @@ class _LoginState extends State<Login> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('เข้าสู่ระบบ'),
-                TextFormField(),
-                TextFormField(),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Text(
+                    'SELF-QUARANTINE',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                      labelText: 'ชื่อผู้ใช้งาน',
+                      labelStyle: TextStyle(color: Colors.purple),
+                      prefixIcon: Icon(Icons.person, color: Colors.purple),
+                      border: InputBorder.none,
+                      fillColor: Colors.grey[100],
+                      filled: true),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      labelText: 'รหัสผ่าน',
+                      labelStyle: TextStyle(color: Colors.purple),
+                      prefixIcon: Icon(
+                        Icons.vpn_key,
+                        color: Colors.purple,
+                      ),
+                      border: InputBorder.none,
+                      fillColor: Colors.grey[100],
+                      filled: true),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -55,34 +84,34 @@ class _LoginState extends State<Login> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  RaisedButton(
-                    padding: EdgeInsets.only(left: 40, right: 40),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    color: Colors.pink,
-                    textColor: Colors.white,
-                    onPressed: () {},
-                    child: Text(
-                      'GOOGLE',
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.normal),
+                    RaisedButton(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      color: Colors.pink,
+                      textColor: Colors.white,
+                      onPressed: () {},
+                      child: Text(
+                        'GOOGLE',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.normal),
+                      ),
                     ),
-                  ),
-                  RaisedButton(
-                    padding: EdgeInsets.only(left: 30, right: 30),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    color: Colors.blueAccent,
-                    textColor: Colors.white,
-                    onPressed: () {},
-                    child: Text(
-                      'FACEBOOK',
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.normal),
+                    RaisedButton(
+                      padding: EdgeInsets.only(left: 30, right: 30),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      color: Colors.blueAccent,
+                      textColor: Colors.white,
+                      onPressed: () {},
+                      child: Text(
+                        'FACEBOOK',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.normal),
+                      ),
                     ),
-                  ),
-                ],)
-
+                  ],
+                )
               ],
             ),
           )
