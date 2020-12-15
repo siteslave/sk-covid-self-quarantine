@@ -1,3 +1,5 @@
+import 'package:covid_self_quarantine/Api.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,8 +12,23 @@ class _LoginState extends State<Login> {
 
   final _formKey = GlobalKey<FormState>();
 
+  Api api = Api();
+
   TextEditingController ctrlUsername = TextEditingController();
   TextEditingController ctrlPassword = TextEditingController();
+
+  Future doLogin() async {
+    String username = ctrlUsername.text;
+    String password = ctrlPassword.text;
+
+    try {
+      Response response = await api.login(username, password);
+      print(response.data);
+    } catch(error) {
+      print(error);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +119,7 @@ class _LoginState extends State<Login> {
                           icon: Icon(Icons.keyboard),
                           onPressed: () {
                             if(_formKey.currentState.validate()) {
-                              // valid
+                              doLogin();
                             }
                           },
                           label: Text(
