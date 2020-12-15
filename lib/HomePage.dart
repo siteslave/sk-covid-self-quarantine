@@ -1,11 +1,13 @@
 import 'dart:ui';
 
+import 'package:covid_self_quarantine/pages/Login.dart';
 import 'package:covid_self_quarantine/pages/Setting.dart';
 import 'package:covid_self_quarantine/widgets/CallEmergencyWidget.dart';
 import 'package:covid_self_quarantine/widgets/CheckInWidget.dart';
 import 'package:covid_self_quarantine/widgets/ImageProfileWidget.dart';
 import 'package:covid_self_quarantine/widgets/MainMenuWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,14 +28,14 @@ class _HomePageState extends State<HomePage> {
               child: Icon(
                 Icons.admin_panel_settings_rounded,
                 color: Colors.purple,
-                size: 45,
+                size: 40,
               ),
             ),
             Text(
               'SELF-QUARANTINE',
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold),
             ),
           ],
@@ -45,13 +47,28 @@ class _HomePageState extends State<HomePage> {
               size: 25,
               color: Colors.purple,
             ),
-            onPressed: () {
+            onPressed: () async {
+
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => Setting(
                         userId: 20,
                       )));
             },
-          )
+          ),
+
+          IconButton(
+            icon: Icon(
+              Icons.exit_to_app,
+              size: 25,
+              color: Colors.purple,
+            ),
+            onPressed: () async {
+              final storage = new FlutterSecureStorage();
+              await storage.delete(key: "token");
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => Login()));
+            },
+          ),
         ],
       ),
       body: ListView(
@@ -68,7 +85,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.pink,
         onPressed: () {},
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

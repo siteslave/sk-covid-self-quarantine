@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -26,6 +28,14 @@ class Api {
       "username": username,
       "password": password,
     });
+  }
+
+  Future<Response> getInfo(String token) async {
+    String path = '/api/quarantine/info';
+
+    return await dio.get(path,
+        options: Options(
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
   }
 
 

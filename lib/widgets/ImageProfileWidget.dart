@@ -1,5 +1,7 @@
+import 'package:covid_self_quarantine/Api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ImageProfileWidget extends StatefulWidget {
   @override
@@ -7,6 +9,41 @@ class ImageProfileWidget extends StatefulWidget {
 }
 
 class _ImageProfileWidgetState extends State<ImageProfileWidget> {
+
+  Api api = Api();
+
+  final storage = new FlutterSecureStorage();
+
+  String imageUrl;
+  String fullname;
+
+  Future getInfo() async {
+    try {
+      String token = await storage.read(key: "token");
+      var response = await api.getInfo(token);
+      var data = response.data;
+
+      if (data['first_name'] != null) {
+        setState(() {
+          imageUrl = data['image_url'];
+          fullname = '${data['first_name']} ${data['last_name']}';
+        });
+      } else {
+        print('ไม่พบข้อมูลผู้ใช้งาน');
+      }
+
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getInfo();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,7 +63,7 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
                   image: DecorationImage(
                       fit: BoxFit.fill,
                       image: NetworkImage(
-                          'https://randomuser.me/api/portraits/men/36.jpg'))),
+                          '${imageUrl ?? 'https://via.placeholder.com/150'}'))),
             ),
             Positioned(
               bottom: 20,
@@ -51,7 +88,7 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
           ],
         ),
         Text(
-          'Mr. Satit Rianpit',
+          '${fullname ?? "DEMO DEMO"}',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         )
       ],
