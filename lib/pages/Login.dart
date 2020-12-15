@@ -35,9 +35,15 @@ class _LoginState extends State<Login> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(15),
-                    child: Text(
-                      'SELF-QUARANTINE',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.admin_panel_settings, color: Colors.purple, size: 45),
+                        Text(
+                          'SELF-QUARANTINE',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                   TextFormField(
