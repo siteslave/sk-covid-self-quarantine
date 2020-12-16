@@ -29,16 +29,13 @@ class _PreviewImageState extends State<PreviewImage> {
     print('Camera: ${statuses[Permission.camera]}');
     print('Storage ${statuses[Permission.storage]}');
 
-    bool isCameraGranted = await Permission.camera
-        .request()
-        .isGranted;
+    bool isCameraGranted = await Permission.camera.request().isGranted;
 
     if (!isCameraGranted) {
       print('กรุณมาเปิดสิทธิ์การใช้กล้อง');
       Navigator.of(context).pop();
     }
   }
-
 
   Future uploadImage(File imageFile) async {
     try {
@@ -56,10 +53,12 @@ class _PreviewImageState extends State<PreviewImage> {
 
   Future getImageFromCamera() async {
     try {
-      final pickedFile = await picker.getImage(source: ImageSource.camera);
+      final pickedFile = await picker.getImage(
+          source: ImageSource.camera,
+          maxWidth: 460,
+          maxHeight: 460);
 
       if (pickedFile != null) {
-
         print(_image);
         setState(() {
           _image = File(pickedFile.path);
@@ -75,7 +74,10 @@ class _PreviewImageState extends State<PreviewImage> {
 
   Future getImageFromGallery() async {
     try {
-      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+      final pickedFile = await picker.getImage(
+          source: ImageSource.gallery,
+          maxWidth: 460,
+          maxHeight: 460);
 
       if (pickedFile != null) {
         setState(() {
@@ -110,42 +112,44 @@ class _PreviewImageState extends State<PreviewImage> {
         actions: [
           IconButton(
             icon: Icon(Icons.file_upload),
-            onPressed: _image != null ? () {
-              uploadImage(_image);
-            } : null,
+            onPressed: _image != null
+                ? () {
+                    uploadImage(_image);
+                  }
+                : null,
           )
         ],
       ),
       body: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _image != null ? Container(
-            margin: EdgeInsets.all(20),
-            alignment: Alignment.center,
-            height: 350,
-            decoration: BoxDecoration(
-                // color: Colors.white,
-                image: DecorationImage(
-                    image: FileImage(_image),
+          _image != null
+              ? Container(
+                  margin: EdgeInsets.all(20),
+                  alignment: Alignment.center,
+                  height: 350,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    image: DecorationImage(
+                      image: FileImage(_image),
+                    ),
+                    // border: Border.all(color: Colors.grey, width: 2),
+                    // borderRadius: BorderRadius.circular(15)
+                  ),
+                )
+              : Container(
+                  margin: EdgeInsets.all(20),
+                  alignment: Alignment.center,
+                  height: 250,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey, width: 2),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Icon(
+                    Icons.photo_camera,
+                    color: Colors.grey,
+                  ),
                 ),
-                // border: Border.all(color: Colors.grey, width: 2),
-                // borderRadius: BorderRadius.circular(15)
-            ),
-
-          ) :
-          Container(
-            margin: EdgeInsets.all(20),
-            alignment: Alignment.center,
-            height: 250,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.grey, width: 2),
-                borderRadius: BorderRadius.circular(15)),
-            child: Icon(
-              Icons.photo_camera,
-              color: Colors.grey,
-            ),
-          ),
           FlatButton.icon(
             icon: Icon(
               Icons.camera_alt,

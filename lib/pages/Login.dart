@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -19,6 +20,19 @@ class _LoginState extends State<Login> {
   TextEditingController ctrlPassword = TextEditingController();
 
   final storage = new FlutterSecureStorage();
+  //
+  // Future checkToken() async {
+  //   String token = await storage.read(key: 'token');
+  //
+  //   if (token != null) {
+  //     // check expired?
+  //     bool hasExpired = JwtDecoder.isExpired(token);
+  //     if (!hasExpired) {
+  //       Navigator.of(context).pushReplacement(
+  //           MaterialPageRoute(builder: (context) => HomePage()));
+  //     }
+  //   }
+  // }
 
   Future doLogin() async {
     String username = ctrlUsername.text;
@@ -38,6 +52,12 @@ class _LoginState extends State<Login> {
     } catch (error) {
       print(error);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // checkToken();
   }
 
   @override
