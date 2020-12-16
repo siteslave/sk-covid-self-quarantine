@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:covid_self_quarantine/Api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ImageProfileWidget extends StatefulWidget {
   @override
@@ -16,6 +19,9 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
 
   String imageUrl;
   String fullname;
+
+  File _image;
+  final picker = ImagePicker();
 
   Future getInfo() async {
     try {
@@ -37,12 +43,71 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
     }
   }
 
+  Future getImageFromCamera() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        print(_image);
+
+        Navigator.of(context).pop();
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        print(_image);
+        Navigator.of(context).pop();
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  void showModal() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200,
+          color: Colors.white,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text('เลือกแหล่งภาพ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                ListTile(
+                  title: Text('จากกล้อง (Camera)'),
+                  leading: Icon(Icons.camera_alt),
+                  onTap: () => getImageFromCamera(),
+                ),
+                ListTile(
+                  title: Text('จากแกลอลี่ (Gallery)'),
+                  leading: Icon(Icons.photo_album),
+                  onTap: () => getImageFromGallery(),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     getInfo();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +146,7 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
                     size: 35,
                     color: Colors.black54,
                   ),
-                  onPressed: () {},
+                  onPressed: () => showModal(),
                 ),
               ),
             )
