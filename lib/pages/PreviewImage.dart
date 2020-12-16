@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../Api.dart';
 
@@ -19,14 +20,32 @@ class _PreviewImageState extends State<PreviewImage> {
   File _image;
   final picker = ImagePicker();
 
+  Future checkPermission() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.storage,
+    ].request();
+
+    print('Camera: ${statuses[Permission.camera]}');
+    print('Storage ${statuses[Permission.storage]}');
+
+    bool isCameraGranted = await Permission.camera
+        .request()
+        .isGranted;
+
+    if (!isCameraGranted) {
+      print('กรุณมาเปิดสิทธิ์การใช้กล้อง');
+      Navigator.of(context).pop();
+    }
+  }
+
+
   Future uploadImage(File imageFile) async {
     try {
       String token = await storage.read(key: "token");
       var response = await api.uploadImage(imageFile, token);
-      var data = response.data;
-
       if (response.statusCode == 200) {
-        print(data);
+        Navigator.of(context).pop();
       } else {
         print('ไม่สามารถอัปโหลดได้');
       }
@@ -72,6 +91,12 @@ class _PreviewImageState extends State<PreviewImage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    checkPermission();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +110,9 @@ class _PreviewImageState extends State<PreviewImage> {
         actions: [
           IconButton(
             icon: Icon(Icons.file_upload),
-            onPressed: () {},
+            onPressed: _image != null ? () {
+              uploadImage(_image);
+            } : null,
           )
         ],
       ),
