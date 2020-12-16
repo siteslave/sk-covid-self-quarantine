@@ -20,8 +20,6 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
   String imageUrl;
   String fullname;
 
-
-
   Future getInfo() async {
     try {
       String token = await storage.read(key: "token");

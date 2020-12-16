@@ -12,7 +12,6 @@ class PreviewImage extends StatefulWidget {
 }
 
 class _PreviewImageState extends State<PreviewImage> {
-
   Api api = Api();
 
   final storage = new FlutterSecureStorage();
@@ -41,8 +40,11 @@ class _PreviewImageState extends State<PreviewImage> {
       final pickedFile = await picker.getImage(source: ImageSource.camera);
 
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+
         print(_image);
+        setState(() {
+          _image = File(pickedFile.path);
+        });
         // uploadImage(_image);
       } else {
         print('No image selected.');
@@ -57,8 +59,9 @@ class _PreviewImageState extends State<PreviewImage> {
       final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        print(_image);
+        setState(() {
+          _image = File(pickedFile.path);
+        });
         // uploadImage(_image);
       } else {
         print('No image selected.');
@@ -89,6 +92,20 @@ class _PreviewImageState extends State<PreviewImage> {
       body: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          _image != null ? Container(
+            margin: EdgeInsets.all(20),
+            alignment: Alignment.center,
+            height: 350,
+            decoration: BoxDecoration(
+                // color: Colors.white,
+                image: DecorationImage(
+                    image: FileImage(_image),
+                ),
+                // border: Border.all(color: Colors.grey, width: 2),
+                // borderRadius: BorderRadius.circular(15)
+            ),
+
+          ) :
           Container(
             margin: EdgeInsets.all(20),
             alignment: Alignment.center,
@@ -97,15 +114,22 @@ class _PreviewImageState extends State<PreviewImage> {
                 color: Colors.white,
                 border: Border.all(color: Colors.grey, width: 2),
                 borderRadius: BorderRadius.circular(15)),
-            child: Icon(Icons.photo_camera, color: Colors.grey,),
+            child: Icon(
+              Icons.photo_camera,
+              color: Colors.grey,
+            ),
           ),
           FlatButton.icon(
-            icon: Icon(Icons.camera_alt, color: Colors.pink,),
+            icon: Icon(
+              Icons.camera_alt,
+              color: Colors.pink,
+            ),
             onPressed: () {
               getImageFromCamera();
             },
             label: Text('ภาพจากกล้อง (Camera)'),
-          ),    FlatButton.icon(
+          ),
+          FlatButton.icon(
             icon: Icon(Icons.photo, color: Colors.teal),
             onPressed: () {
               getImageFromGallery();
