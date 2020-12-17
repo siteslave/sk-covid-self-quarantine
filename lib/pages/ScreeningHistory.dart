@@ -57,7 +57,10 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
         children: [
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text('ประวัติการคัดกรอง', style: TextStyle(fontWeight: FontWeight.bold),),
+            child: Text(
+              'ประวัติการคัดกรอง',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           Expanded(
             child: ListView.builder(
@@ -68,7 +71,10 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
                   title:
                       Text('${item['serve_date']} เวลา ${item['serve_time']}'),
                   leading: CircleAvatar(
-                    child: Text('${item['temp']}', style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      '${item['temp']}',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     backgroundColor:
                         item['temp'] >= 37.5 ? Colors.red : Colors.green,
                   ),
@@ -89,10 +95,15 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('ไอ'),
-                          Text(
-                            '${item['cough'] == 'Y' ? 'ใช่' : 'ไม่'}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          )
+                          item['cough'] == 'Y'
+                              ? Icon(
+                                  Icons.check,
+                                  color: Colors.green,
+                                )
+                              : Icon(
+                                  Icons.clear,
+                                  color: Colors.red,
+                                )
                         ],
                       ),
                       Row(
