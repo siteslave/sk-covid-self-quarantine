@@ -17,11 +17,14 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
   final storage = new FlutterSecureStorage();
   List items = [];
 
+  TextEditingController ctrlQuery = TextEditingController();
+
   Future getScreening() async {
     try {
       String token = await storage.read(key: "token");
 
-      Response rs = await api.getScreening(token);
+      String query = ctrlQuery.text ?? '';
+      Response rs = await api.getScreening(token, query);
 
       if (rs.statusCode == 200) {
         setState(() {
@@ -59,9 +62,29 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
         children: [
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text(
-              'ประวัติการคัดกรอง',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: ctrlQuery,
+                  onFieldSubmitted: (value) {
+                    getScreening();
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    labelText: 'ค้นหา....',
+                    suffixIcon: IconButton(icon: Icon(Icons.search), onPressed: () {
+                      getScreening();
+                    },)
+                  ),
+                ),
+                Divider(),
+                Text(
+                  'ประวัติการคัดกรอง',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
           Expanded(

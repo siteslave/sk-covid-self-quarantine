@@ -34,8 +34,10 @@ class Api {
     });
   }
 
-  Future<Response> getScreening(String token) async {
-    String path = '/api/quarantine/screening';
+  Future<Response> getScreening(String token, [String temp]) async {
+
+    String query = temp != null ? temp : '';
+    String path = '/api/quarantine/screening?query=$query';
 
     return await dio.get(path,
         options: Options(
