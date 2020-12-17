@@ -10,7 +10,7 @@ import 'dart:math';
 
 class ImageProfileWidget extends StatefulWidget {
   final String fullname;
-  final NetworkImage imageProvider;
+  NetworkImage imageProvider;
   final String token;
 
   ImageProfileWidget(
@@ -39,7 +39,7 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
         var rng = new Random();
         var x = rng.nextInt(10000);
 
-        imageProfile = NetworkImage(
+        widget.imageProvider = NetworkImage(
             '${api.apiUrl}/api/quarantine/image-profile?$x',
             headers: {'Authorization': 'Bearer $token'});
       });
