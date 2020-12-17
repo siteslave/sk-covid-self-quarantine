@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:covid_self_quarantine/pages/Login.dart';
@@ -10,6 +11,7 @@ import 'package:covid_self_quarantine/widgets/MainMenuWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'Api.dart';
 import 'widgets/charts/Bar.dart';
 import 'widgets/charts/Donut.dart';
 
@@ -20,6 +22,45 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final storage = new FlutterSecureStorage();
+  final Api api = Api();
+  String fullname;
+  String token;
+
+  NetworkImage imageProfile = NetworkImage('https://via.placeholder.com/150');
+
+  Future getInfo() async {
+    try {
+      String _token = await storage.read(key: "token");
+      setState(() {
+        token = _token;
+        var rng = new Random();
+        var x = rng.nextInt(10000);
+
+        imageProfile = NetworkImage(
+            '${api.apiUrl}/api/quarantine/image-profile?$x',
+            headers: {'Authorization': 'Bearer $_token'});
+      });
+      var response = await api.getInfo(_token);
+      var data = response.data;
+
+      if (data['first_name'] != null) {
+        setState(() {
+          fullname = '${data['first_name']} ${data['last_name']}';
+        });
+      } else {
+        print('ไม่พบข้อมูลผู้ใช้งาน');
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +118,11 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView(
         children: [
-          ImageProfileWidget(),
+          ImageProfileWidget(
+            token: token,
+            fullname: fullname,
+            imageProvider: imageProfile,
+          ),
           CheckInWidget(),
           CallEmergencyWidget(),
           Container(
@@ -92,6 +137,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               )),
           Container(
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              padding: EdgeInsets.all(10),
               color: Colors.white,
               height: 200,
               width: 200,

@@ -30,14 +30,14 @@ class _BarChartState extends State<BarChart> {
           measureFn: (LinearSales sales, _) => sales.sales,
           data: data,
           labelAccessorFn: (LinearSales sales, _) =>
-              '\$${sales.sales.toString()}'),
+              '${sales.sales.toString()}'),
       new charts.Series<LinearSales, String>(
           id: 'Sales',
           domainFn: (LinearSales sales, _) => sales.temp,
           measureFn: (LinearSales sales, _) => sales.sales,
           data: data2,
           labelAccessorFn: (LinearSales sales, _) =>
-              '\$${sales.sales.toString()}'),
+              '${sales.sales.toString()}'),
     ];
 
     return charts.BarChart(

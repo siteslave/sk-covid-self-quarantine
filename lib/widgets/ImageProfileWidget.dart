@@ -9,6 +9,13 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:math';
 
 class ImageProfileWidget extends StatefulWidget {
+  final String fullname;
+  final NetworkImage imageProvider;
+  final String token;
+
+  ImageProfileWidget(
+      {@required this.fullname, @required this.imageProvider, @required this.token});
+
   @override
   _ImageProfileWidgetState createState() => _ImageProfileWidgetState();
 }
@@ -29,7 +36,6 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
     try {
       String token = await storage.read(key: "token");
       setState(() {
-
         var rng = new Random();
         var x = rng.nextInt(10000);
 
@@ -95,7 +101,7 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
   @override
   void initState() {
     super.initState();
-    getInfo();
+    // getInfo();
   }
 
   @override
@@ -114,10 +120,10 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
                   border: Border.all(color: Colors.white, width: 5),
                   color: Colors.red,
                   shape: BoxShape.circle,
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: imageProfile
-                  )),
+                  image:
+                      DecorationImage(fit: BoxFit.fill,
+                          image: widget.imageProvider ?? imageProfile
+                      )),
             ),
             Positioned(
               bottom: 20,
@@ -134,9 +140,10 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
                     color: Colors.black54,
                   ),
                   onPressed: () async {
-                    var res = await Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PreviewImage(),
-                        fullscreenDialog: true));
+                    var res = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => PreviewImage(),
+                            fullscreenDialog: true));
 
                     if (res != null) {
                       getInfo();
@@ -148,7 +155,7 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
           ],
         ),
         Text(
-          '${fullname ?? "DEMO DEMO"}',
+          '${widget.fullname ?? ""}',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         )
       ],
