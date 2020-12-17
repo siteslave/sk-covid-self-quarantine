@@ -42,7 +42,7 @@ class _PreviewImageState extends State<PreviewImage> {
       String token = await storage.read(key: "token");
       var response = await api.uploadImage(imageFile, token);
       if (response.statusCode == 200) {
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       } else {
         print('ไม่สามารถอัปโหลดได้');
       }

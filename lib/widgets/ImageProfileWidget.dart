@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:math';
 
 class ImageProfileWidget extends StatefulWidget {
   @override
@@ -22,18 +23,25 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
 
   String userToken;
 
+  NetworkImage imageProfile = NetworkImage('https://via.placeholder.com/150');
+
   Future getInfo() async {
     try {
       String token = await storage.read(key: "token");
       setState(() {
-        userToken = token;
+
+        var rng = new Random();
+        var x = rng.nextInt(10000);
+
+        imageProfile = NetworkImage(
+            '${api.apiUrl}/api/quarantine/image-profile?$x',
+            headers: {'Authorization': 'Bearer $token'});
       });
       var response = await api.getInfo(token);
       var data = response.data;
 
       if (data['first_name'] != null) {
         setState(() {
-          imageUrl = data['image_url'];
           fullname = '${data['first_name']} ${data['last_name']}';
         });
       } else {
@@ -108,9 +116,8 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                       fit: BoxFit.fill,
-                      image: NetworkImage(
-                          '${api.apiUrl}/api/quarantine/image-profile',
-                          headers: {'Authorization': 'Bearer $userToken'}))),
+                      image: imageProfile
+                  )),
             ),
             Positioned(
               bottom: 20,
@@ -126,10 +133,14 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
                     size: 35,
                     color: Colors.black54,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
+                  onPressed: () async {
+                    var res = await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => PreviewImage(),
                         fullscreenDialog: true));
+
+                    if (res != null) {
+                      getInfo();
+                    }
                   },
                 ),
               ),
