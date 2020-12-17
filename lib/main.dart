@@ -1,4 +1,5 @@
 import 'package:covid_self_quarantine/HomePage.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -33,6 +34,13 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('th', 'TH'),
+      ],
       title: 'SELF-QUARANTINE',
       home: this.isLogged ? HomePage() : Login(),
     );

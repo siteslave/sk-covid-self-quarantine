@@ -1,3 +1,4 @@
+import 'package:covid_self_quarantine/Utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,7 +12,8 @@ class ScreeningHistory extends StatefulWidget {
 
 class _ScreeningHistoryState extends State<ScreeningHistory> {
   Api api = Api();
-
+  Utils utils = Utils();
+  
   final storage = new FlutterSecureStorage();
   List items = [];
 
@@ -66,10 +68,11 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
             child: ListView.builder(
               itemBuilder: (context, index) {
                 var item = items[index];
-
+                DateTime date = DateTime.parse(item['serve_date']);
+                
                 return ListTile(
                   title:
-                      Text('${item['serve_date']} เวลา ${item['serve_time']}'),
+                      Text('${utils.toThaiDate(date)} เวลา ${item['serve_time']}'),
                   leading: CircleAvatar(
                     child: Text(
                       '${item['temp']}',
