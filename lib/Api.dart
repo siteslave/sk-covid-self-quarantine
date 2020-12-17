@@ -34,6 +34,14 @@ class Api {
     });
   }
 
+  Future<Response> getScreening(String token) async {
+    String path = '/api/quarantine/screening';
+
+    return await dio.get(path,
+        options: Options(
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
+  }
+
   Future<Response> getInfo(String token) async {
     String path = '/api/quarantine/info';
 
