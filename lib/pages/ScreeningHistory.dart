@@ -2,6 +2,7 @@ import 'package:covid_self_quarantine/Utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dropdown_formfield/dropdown_formfield.dart';
 
 import '../Api.dart';
 
@@ -16,14 +17,15 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
   
   final storage = new FlutterSecureStorage();
   List items = [];
+  List tempLists = [];
+
+  String temp = '';
 
   TextEditingController ctrlQuery = TextEditingController();
 
-  Future getScreening() async {
+  Future getScreening(String query) async {
     try {
       String token = await storage.read(key: "token");
-
-      String query = ctrlQuery.text ?? '';
       Response rs = await api.getScreening(token, query);
 
       if (rs.statusCode == 200) {
@@ -38,10 +40,28 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
     }
   }
 
+  Future getTempList() async {
+    try {
+      String token = await storage.read(key: "token");
+      Response rs = await api.getTempList(token);
+
+      if (rs.statusCode == 200) {
+        setState(() {
+          tempLists = rs.data;
+        });
+      } else {
+        print('HTTP Error');
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    getScreening();
+    getScreening('');
+    getTempList();
   }
 
   @override
@@ -67,7 +87,7 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
                 TextFormField(
                   controller: ctrlQuery,
                   onFieldSubmitted: (value) {
-                    getScreening();
+                    getScreening(value);
                   },
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -75,9 +95,21 @@ class _ScreeningHistoryState extends State<ScreeningHistory> {
                     fillColor: Colors.grey[100],
                     labelText: 'ค้นหา....',
                     suffixIcon: IconButton(icon: Icon(Icons.search), onPressed: () {
-                      getScreening();
+                      String _query = ctrlQuery.text ?? '';
+                      getScreening(_query);
                     },)
                   ),
+                ),
+                DropDownFormField(
+                  titleText: 'อุณหภูมิ',
+                  hintText: 'เลือกอุณหภูิม',
+                  value: temp,
+                  onChanged: (value) {
+                    getScreening(value.toString());
+                  },
+                  dataSource: tempLists,
+                  textField: 'display',
+                  valueField: 'value',
                 ),
                 Divider(),
                 Text(
