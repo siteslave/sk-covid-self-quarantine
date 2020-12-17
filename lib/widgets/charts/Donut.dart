@@ -7,17 +7,27 @@ class DonutChart extends StatefulWidget {
 }
 
 class _DonutChartState extends State<DonutChart> {
-
   List<charts.Series> seriesList = [];
 
   @override
   Widget build(BuildContext context) {
-
-    final data = [
-      new LinearSales("35 องศา", 5),
-      new LinearSales("37 องศา", 2),
-      new LinearSales("40 องศา", 10),
+    List jsonData = [
+      {"temp": 35, "display": "35 องศา", "value": 35},
+      {"temp": 36, "display": "36 องศา", "value": 36},
+      {"temp": 38, "display": "38 องศา", "value": 38},
+      {"temp": 40, "display": "40 องศา", "value": 40}
     ];
+
+    List<LinearSales> data = [];
+    jsonData.forEach((element) {
+      data.add(LinearSales(element['display'], element['value']));
+    });
+
+    // final data = [
+    //   new LinearSales("35 องศา", 5),
+    //   new LinearSales("37 องศา", 2),
+    //   new LinearSales("40 องศา", 10),
+    // ];
 
     List<charts.Series<LinearSales, String>> _mySeries = [
       new charts.Series<LinearSales, String>(
@@ -36,8 +46,7 @@ class _DonutChartState extends State<DonutChart> {
             arcRendererDecorators: [
               new charts.ArcLabelDecorator(
                   labelPosition: charts.ArcLabelPosition.outside)
-            ]
-        ));
+            ]));
   }
 }
 

@@ -17,15 +17,27 @@ class _BarChartState extends State<BarChart> {
       new LinearSales("40 องศา", 10),
     ];
 
+    final data2 = [
+      new LinearSales("35 องศา", 20),
+      new LinearSales("37 องศา", 5),
+      new LinearSales("40 องศา", 15),
+    ];
+
     List<charts.Series<LinearSales, String>> _mySeries = [
       new charts.Series<LinearSales, String>(
-        id: 'Sales',
-        domainFn: (LinearSales sales, _) => sales.temp,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        data: data,
+          id: 'Sales',
+          domainFn: (LinearSales sales, _) => sales.temp,
+          measureFn: (LinearSales sales, _) => sales.sales,
+          data: data,
           labelAccessorFn: (LinearSales sales, _) =>
-          '\$${sales.sales.toString()}'
-      )
+              '\$${sales.sales.toString()}'),
+      new charts.Series<LinearSales, String>(
+          id: 'Sales',
+          domainFn: (LinearSales sales, _) => sales.temp,
+          measureFn: (LinearSales sales, _) => sales.sales,
+          data: data2,
+          labelAccessorFn: (LinearSales sales, _) =>
+              '\$${sales.sales.toString()}'),
     ];
 
     return charts.BarChart(
