@@ -20,9 +20,14 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
   String imageUrl;
   String fullname;
 
+  String userToken;
+
   Future getInfo() async {
     try {
       String token = await storage.read(key: "token");
+      setState(() {
+        userToken = token;
+      });
       var response = await api.getInfo(token);
       var data = response.data;
 
@@ -104,13 +109,13 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
                   image: DecorationImage(
                       fit: BoxFit.fill,
                       image: NetworkImage(
-                          '${imageUrl ?? 'https://via.placeholder.com/150'}'))),
+                          '${api.apiUrl}/api/quarantine/image-profile',
+                          headers: {'Authorization': 'Bearer $userToken'}))),
             ),
             Positioned(
               bottom: 20,
               right: 5,
               child: Container(
-
                 height: 50,
                 width: 50,
                 decoration:

@@ -12,6 +12,9 @@ Dio dio = new Dio(new BaseOptions(
     receiveTimeout: 60 * 1000));
 
 class Api {
+
+  String apiUrl = 'http://192.168.43.97:8080';
+
   Api() {
     dio.interceptors.add(PrettyDioLogger(
       requestHeader: true,

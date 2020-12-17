@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:covid_self_quarantine/pages/Login.dart';
@@ -15,6 +16,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  final storage = new FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +87,22 @@ class _HomePageState extends State<HomePage> {
         label: Text('บันทึกคัดกรอง'),
         icon: Icon(Icons.fact_check),
         backgroundColor: Colors.pink,
-        onPressed: () {},
+        onPressed: () async {
+
+          Map user = {
+            "id": 1,
+            "first_name": "Satit",
+            "last_name": "Rianpit",
+            "roles": [ "Admin", "Manager"]
+          };
+          await storage.write(key: 'user', value: json.encode(user));
+          String strUser = await storage.read(key: 'user');
+          print(strUser);
+          Map _user = json.decode(strUser);
+          print(_user['first_name']);
+          print(_user['last_name']);
+          print(_user['roles']);
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
