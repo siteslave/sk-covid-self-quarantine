@@ -10,13 +10,15 @@ import 'package:covid_self_quarantine/widgets/MainMenuWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'widgets/charts/Bar.dart';
+import 'widgets/charts/Donut.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   final storage = new FlutterSecureStorage();
 
   @override
@@ -52,14 +54,12 @@ class _HomePageState extends State<HomePage> {
               color: Colors.purple,
             ),
             onPressed: () async {
-
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => Setting(
                         userId: 20,
                       )));
             },
           ),
-
           IconButton(
             icon: Icon(
               Icons.exit_to_app,
@@ -69,8 +69,8 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               final storage = new FlutterSecureStorage();
               await storage.delete(key: "token");
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => Login()));
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => Login()));
             },
           ),
         ],
@@ -80,6 +80,28 @@ class _HomePageState extends State<HomePage> {
           ImageProfileWidget(),
           CheckInWidget(),
           CallEmergencyWidget(),
+          Container(
+              color: Colors.white,
+              height: 200,
+              width: 200,
+              child: Column(
+                children: [
+                  Text('สรุปผู้ป่วย',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Expanded(child: DonutChart()),
+                ],
+              )),
+          Container(
+              color: Colors.white,
+              height: 200,
+              width: 200,
+              child: Column(
+                children: [
+                  Text('สรุปผู้ป่วย',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Expanded(child: BarChart()),
+                ],
+              )),
           MainMenuWidget()
         ],
       ),
@@ -88,12 +110,11 @@ class _HomePageState extends State<HomePage> {
         icon: Icon(Icons.fact_check),
         backgroundColor: Colors.pink,
         onPressed: () async {
-
           Map user = {
             "id": 1,
             "first_name": "Satit",
             "last_name": "Rianpit",
-            "roles": [ "Admin", "Manager"]
+            "roles": ["Admin", "Manager"]
           };
           await storage.write(key: 'user', value: json.encode(user));
           String strUser = await storage.read(key: 'user');
