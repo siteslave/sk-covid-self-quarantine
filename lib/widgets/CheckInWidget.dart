@@ -123,54 +123,61 @@ class _CheckInWidgetState extends State<CheckInWidget> {
           color: Colors.purple[50],
           borderRadius: BorderRadius.circular(15),
           border: Border.all(color: Colors.purple, width: 1)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Text(
-                    'Check-In',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.purple),
-                  ),
-                  SizedBox(width: 5),
-                  IconButton(icon: Icon(Icons.my_location, color: Colors.grey,), onPressed: () {
-                    _determinePosition();
-                  },)
-                ],
+              Text(
+                'Check-In',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.purple),
               ),
-              Text('Current time: ${utils.toThaiDate(now)} ${now.hour}:${now.minute}'),
-              lat != null && lng != null ? Text(
-                '${currentLocationName ?? 'ไม่พบชื่อพิกัด'}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ) :Text('กรุณาเปิด GPS', style: TextStyle(color: Colors.red)),
+
+              IconButton(icon: Icon(Icons.my_location, color: Colors.pink,), onPressed: () {
+                _determinePosition();
+              },)
             ],
           ),
-          GestureDetector(
-            onTap: () {
-              if (lat != null && lng != null && currentLocationName != null) {
-                saveTracking();
-              }
-            },
-            child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(color: Colors.purple, width: 1),
-                ),
-                child: Icon(
-                  Icons.add_location_alt,
-                  size: 55,
-                  color: Colors.purple,
-                )),
-          )
+          Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  Text('Current time: ${utils.toThaiDate(now)} ${now.hour}:${now.minute}'),
+                  lat != null && lng != null ? Text(
+                    '${currentLocationName ?? 'ไม่พบชื่อพิกัด'}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ) :Text('กรุณาเปิด GPS', style: TextStyle(color: Colors.red)),
+                ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (lat != null && lng != null && currentLocationName != null) {
+                    saveTracking();
+                  }
+                },
+                child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      border: Border.all(color: Colors.purple, width: 1),
+                    ),
+                    child: Icon(
+                      Icons.add_location_alt,
+                      size: 55,
+                      color: Colors.purple,
+                    )),
+              )
+            ],
+          ),
         ],
       ),
     );
