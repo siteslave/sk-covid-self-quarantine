@@ -10,6 +10,7 @@ import 'package:covid_self_quarantine/widgets/ImageProfileWidget.dart';
 import 'package:covid_self_quarantine/widgets/MainMenuWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'Api.dart';
 import 'widgets/charts/Bar.dart';
@@ -22,6 +23,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final storage = new FlutterSecureStorage();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   final Api api = Api();
   String fullname;
   String token;
@@ -55,10 +58,37 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future initialPushNotify() async {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) {
+      print("Push Messaging token: $token");
+    });
+  }
+
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    initialPushNotify();
+
     getInfo();
   }
 
