@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -12,7 +11,6 @@ Dio dio = new Dio(new BaseOptions(
     receiveTimeout: 60 * 1000));
 
 class Api {
-
   String apiUrl = 'http://192.168.43.97:8080';
 
   Api() {
@@ -25,6 +23,13 @@ class Api {
     ));
   }
 
+  Future<Response> getCheckInPlace(double lat, double lng) async {
+    String path =
+        'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng&zoom=18&addressdetails=1';
+
+    return await dio.get(path);
+  }
+
   Future<Response> login(String username, String password) async {
     String path = '/api/quarantine/login';
 
@@ -35,7 +40,6 @@ class Api {
   }
 
   Future<Response> getScreening(String token, [String temp]) async {
-
     String query = temp != null ? temp : '';
     String path = '/api/quarantine/screening?query=$query';
 
@@ -44,8 +48,17 @@ class Api {
             headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
   }
 
-  Future<Response> getTempList(String token) async {
+  Future<Response> saveTracking(
+      double lat, double lng, String placeName, String token) async {
+    String path = '/api/quarantine/save-tracking';
 
+    return await dio.post(path,
+        data: {"lat": lat, "lng": lng, "placeName": placeName},
+        options: Options(
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
+  }
+
+  Future<Response> getTempList(String token) async {
     String path = '/api/quarantine/temp-list';
 
     return await dio.get(path,
@@ -83,6 +96,4 @@ class Api {
         options: Options(
             headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
   }
-
-
 }

@@ -30,7 +30,8 @@ dependencies:
   charts_flutter: ^0.9.0
 
   firebase_messaging: ^7.0.3
-
+  geolocator: ^6.1.13
+  fluttertoast: ^7.1.6
 
   cupertino_icons: ^1.0.1
 
