@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CheckInWidget extends StatefulWidget {
   @override
@@ -25,6 +26,16 @@ class _CheckInWidgetState extends State<CheckInWidget> {
 
   String currentLocationName = '';
   DateTime now = DateTime.now();
+
+  // https://www.google.com/maps/search/?api=1&query=36.26577,-92.54324
+  _launchURL() async {
+    String url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   Future getCurrentPlaceName() async {
     try {
@@ -151,9 +162,14 @@ class _CheckInWidgetState extends State<CheckInWidget> {
                 children: [
 
                   Text('Current time: ${utils.toThaiDate(now)} ${now.hour}:${now.minute}'),
-                  lat != null && lng != null ? Text(
-                    '${currentLocationName ?? 'ไม่พบชื่อพิกัด'}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  lat != null && lng != null ? GestureDetector(
+                    onTap: () {
+                      _launchURL();
+                    },
+                    child: Text(
+                      '${currentLocationName ?? 'ไม่พบชื่อพิกัด'}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ) :Text('กรุณาเปิด GPS', style: TextStyle(color: Colors.red)),
                 ],
               ),
