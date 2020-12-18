@@ -53,6 +53,15 @@ class Api {
             headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
   }
 
+  Future<Response> saveDeviceToken(String deviceToken, String token) async {
+    String path = '/api/quarantine/device-token';
+
+    return await dio.put(path,
+        data: {"deviceToken": deviceToken},
+        options: Options(
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
+  }
+
   Future<Response> getInfo(String token) async {
     String path = '/api/quarantine/info';
 

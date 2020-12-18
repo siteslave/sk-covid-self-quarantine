@@ -58,6 +58,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future saveDeviceToken(String deviceToken) async {
+    try {
+      String _token = await storage.read(key: "token");
+
+      var response = await api.saveDeviceToken(deviceToken, _token);
+      var data = response.data;
+
+      if (data['ok']) {
+       print('Register device token success');
+      } else {
+        print('Can not save device token');
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Future initialPushNotify() async {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -79,6 +96,9 @@ class _HomePageState extends State<HomePage> {
     });
     _firebaseMessaging.getToken().then((String token) {
       print("Push Messaging token: $token");
+      if (token != null) {
+        saveDeviceToken(token);
+      }
     });
   }
 
